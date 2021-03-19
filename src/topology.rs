@@ -6,8 +6,8 @@ use keynesis::key::ed25519;
 use std::{net::SocketAddr, sync::Arc};
 
 pub struct Topology {
-    view_layers: Vec<Box<dyn Layer>>,
-    gossip_layers: Vec<Box<dyn Layer>>,
+    view_layers: Vec<Box<dyn Layer + Send + Sync>>,
+    gossip_layers: Vec<Box<dyn Layer + Send + Sync>>,
     profile: Profile,
     profiles: Profiles,
 }
@@ -15,8 +15,8 @@ pub struct Topology {
 struct DefaultBuilder;
 
 impl LayerBuilder for DefaultBuilder {
-    fn build_for_view(&self) -> Vec<Box<dyn Layer>> {
-        let mut layers: Vec<Box<dyn Layer>> = Vec::with_capacity(3);
+    fn build_for_view(&self) -> Vec<Box<dyn Layer + Send + Sync>> {
+        let mut layers: Vec<Box<dyn Layer + Send + Sync>> = Vec::with_capacity(3);
 
         layers.push(Box::new(layer::Rings::new(4)));
         layers.push(Box::new(layer::Vicinity::new(20)));
@@ -25,8 +25,8 @@ impl LayerBuilder for DefaultBuilder {
         layers
     }
 
-    fn build_for_gossip(&self) -> Vec<Box<dyn Layer>> {
-        let mut layers: Vec<Box<dyn Layer>> = Vec::with_capacity(3);
+    fn build_for_gossip(&self) -> Vec<Box<dyn Layer + Send + Sync>> {
+        let mut layers: Vec<Box<dyn Layer + Send + Sync>> = Vec::with_capacity(3);
 
         layers.push(Box::new(layer::Rings::new(10)));
         layers.push(Box::new(layer::Vicinity::new(10)));

@@ -23,8 +23,8 @@ pub trait Layer: Send {
 }
 
 pub trait LayerBuilder {
-    fn build_for_view(&self) -> Vec<Box<dyn Layer>>;
-    fn build_for_gossip(&self) -> Vec<Box<dyn Layer>>;
+    fn build_for_view(&self) -> Vec<Box<dyn Layer + Send + Sync>>;
+    fn build_for_gossip(&self) -> Vec<Box<dyn Layer + Send + Sync>>;
 }
 
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
