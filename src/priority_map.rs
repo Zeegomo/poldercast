@@ -326,4 +326,25 @@ mod tests {
         assert_eq!(iter.next(), Some((&1u32, &"1".to_owned())));
         assert_eq!(iter.next(), None);
     }
+
+    #[test]
+    fn multiple_add_and_remove() {
+        let mut map = PriorityMap::<u32, String>::new(10);
+        map.put(1, "1".to_owned());
+        map.remove(&"1".to_owned());
+        // add and remove works fine
+        assert_eq!(map.len(), 0);
+        assert_eq!(map.iter().count(), 0);
+
+        map.put(1, "1".to_owned());
+        map.put(1, "1".to_owned());
+        // multiple add are still counted as one element
+        assert_eq!(map.len(), 1);
+        assert_eq!(map.iter().count(), 1);
+
+        map.remove(&"1".to_owned());
+        // but removing does not work anymore
+        assert_eq!(map.len(), 0);
+        assert_eq!(map.iter().count(), 0);
+    }
 }
